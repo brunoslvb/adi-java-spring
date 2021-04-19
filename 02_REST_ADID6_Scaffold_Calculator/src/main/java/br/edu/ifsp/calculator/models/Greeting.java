@@ -1,4 +1,4 @@
-package br.edu.ifsp.calculator;
+package br.edu.ifsp.calculator.models;
 
 public class Greeting {
 

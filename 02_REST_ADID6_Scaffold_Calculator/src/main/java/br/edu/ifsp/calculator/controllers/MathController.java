@@ -1,13 +1,16 @@
-package br.edu.ifsp.calculator;
+package br.edu.ifsp.calculator.controllers;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifsp.calculator.exception.UnsuportedMathOperationException;
+import br.edu.ifsp.calculator.service.MathService;
+import br.edu.ifsp.calculator.utils.Convert;
 
 @RestController
 public class MathController {
@@ -16,96 +19,66 @@ public class MathController {
 	
 	private static AtomicLong counter = new AtomicLong();
 	
+	MathService mathService = new MathService();
+	
 	@RequestMapping("/sum/{numberOne}/{numberTwo}")
 	public Double sum(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
 		
-		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+		if(!Convert.isNumeric(numberOne) || !Convert.isNumeric(numberTwo)) {
 			throw new UnsuportedMathOperationException("Por favor entre com um valor numérico!");
 		}
 		
-		Double sum = convertToDouble(numberOne) + convertToDouble(numberTwo);
-		
-		return sum;
+		return mathService.sum(numberOne, numberTwo);
 	}
 	
 	@RequestMapping("/subtraction/{numberOne}/{numberTwo}")
 	public Double subtraction(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
 		
-		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+		if(!Convert.isNumeric(numberOne) || !Convert.isNumeric(numberTwo)) {
 			throw new UnsuportedMathOperationException("Por favor entre com um valor numérico!");
 		}
 		
-		Double sub = convertToDouble(numberOne) - convertToDouble(numberTwo);
-		
-		return sub;
+		return mathService.subtraction(numberOne, numberTwo);
 	}
 	
 	@RequestMapping("/multiplication/{numberOne}/{numberTwo}")
 	public Double multiplication(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
 		
-		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+		if(!Convert.isNumeric(numberOne) || !Convert.isNumeric(numberTwo)) {
 			throw new UnsuportedMathOperationException("Por favor entre com um valor numérico!");
 		}
 		
-		Double mult = convertToDouble(numberOne) * convertToDouble(numberTwo);
-		
-		return mult;
+		return multiplication(numberOne, numberTwo);
 	}
 	
 	@RequestMapping("/division/{numberOne}/{numberTwo}")
 	public Double division(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
 		
-		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+		if(!Convert.isNumeric(numberOne) || !Convert.isNumeric(numberTwo)) {
 			throw new UnsuportedMathOperationException("Por favor entre com um valor numérico!");
 		}
 		
-		Double div = convertToDouble(numberOne) / convertToDouble(numberTwo);
-		
-		return div;
+		return division(numberOne, numberTwo);
 	}
 	
 	@RequestMapping("/mean/{numberOne}/{numberTwo}")
 	public Double mean(@PathVariable("numberOne") String numberOne, @PathVariable("numberTwo") String numberTwo) throws Exception {
 		
-		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+		if(!Convert.isNumeric(numberOne) || !Convert.isNumeric(numberTwo)) {
 			throw new UnsuportedMathOperationException("Por favor entre com um valor numérico!");
 		}
 		
-		Double mean = (convertToDouble(numberOne) + convertToDouble(numberTwo)) / 2;
-		
-		return mean;
+		return mathService.mean(numberOne, numberTwo);
 	}
 	
 	@RequestMapping("/squareRoot/{number}")
 	public Double squareRoot(@PathVariable("number") String number) throws Exception {
 		
-		if(!isNumeric(number)) {
+		if(!Convert.isNumeric(number)) {
 			throw new UnsuportedMathOperationException("Por favor entre com um valor numérico!");
 		}
 		
-		Double squareRoot = (Double) Math.sqrt(convertToDouble(number));
-		
-		return squareRoot;
+		return mathService.squareRoot(number);
 	}
-
-	private Double convertToDouble(String strNumber) {
-		if(strNumber == null) return 0D;
-		
-		String number = strNumber.replaceAll(",", ".");
-		
-		if(isNumeric(number)) return Double.parseDouble(number);
-		
-		return 0D;
-	}
-
-	private boolean isNumeric(String strNumber) {
-		if(strNumber == null) return false;
-		
-		String number = strNumber.replaceAll(",", ".");
-		
-		return number.matches("[-+]?[0-9]*\\.?[0-9]+");
-	}
-	
-	
 	
 }
